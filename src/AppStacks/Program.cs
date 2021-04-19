@@ -7,9 +7,28 @@ namespace AppStacks
         public static void Main(string[] args)
         {
             var app = new App();
-            new AppStacksStack(app, "AppStacksStack");
+            
+            var env = makeEnv("217720823904", "us-west-2");
+            
+            new IdentityServiceFargateStack(app, "IdentityServiceFargateStack", new StackProps
+            {
+                Env = env
+            });
+            
+            new MainServiceFargateStack(app, "MainServiceFargateStack", new StackProps
+            {
+                Env = env
+            });
 
             app.Synth();
+        }
+        private static Environment makeEnv(string account, string region)
+        {
+            return new Environment
+            {
+                Account = account,
+                Region = region
+            };
         }
     }
 }

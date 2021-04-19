@@ -10,6 +10,8 @@
   <ItemGroup>
     <!-- CDK Construct Library dependencies -->
     <PackageReference Include="Amazon.CDK" Version="1.98.0" />
+    <PackageReference Include="Amazon.CDK.AWS.ECS" Version="1.98.0" />
+    <PackageReference Include="Amazon.CDK.AWS.ECS.Patterns" Version="1.98.0" />
     <PackageReference Include="Amazon.CDK.AWS.IAM" Version="1.98.0" />
     <PackageReference Include="Amazon.CDK.AWS.SNS" Version="1.98.0" />
     <PackageReference Include="Amazon.CDK.AWS.SNS.Subscriptions" Version="1.98.0" />

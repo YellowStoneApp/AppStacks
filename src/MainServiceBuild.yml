@@ -1,0 +1,21 @@
+version: 0.2
+
+env:
+  variables:
+    PROJECT: AspNetMvcSampleApp
+    DOTNET_FRAMEWORK: 4.6.1
+phases:
+  build:
+    commands:
+      - 'docker build -t $ECR_REPO_URI:mainservice .'
+      - '$(aws ecr get-login --no-include-email)'
+      - 'docker push $ECR_REPO_URI:$TAG'
+  postbuild:
+    commands:
+      - 'echo "In Post-Build Stage"',
+      - 'cd ..',
+      - "printf '[{\"name\":\"mainservice\",\"imageUri\":\"%s\"}]' $ECR_REPO_URI:$TAG > imagedefinitions.json",
+      - "pwd; ls -al; cat imagedefinitions.json"
+artifacts:
+  files:
+    - 'imagedefinitions.json'

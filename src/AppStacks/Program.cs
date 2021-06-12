@@ -10,15 +10,16 @@ namespace AppStacks
             
             var env = makeEnv("217720823904", "us-west-2");
             
-            new IdentityServiceFargateStack(app, "IdentityServiceFargateStack", new StackProps
+            var mainService = new MainServiceFargateStack(app, "MainServiceFargateStack", new StackProps
+            {
+                Env = env
+            });
+
+            new MainServicePipeline(app, "MainServicePipeline", mainService.FargateService, mainService.Cluster, new StackProps
             {
                 Env = env
             });
             
-            new MainServiceFargateStack(app, "MainServiceFargateStack", new StackProps
-            {
-                Env = env
-            });
 
             app.Synth();
         }

@@ -10,6 +10,8 @@
   <ItemGroup>
     <!-- CDK Construct Library dependencies -->
     <PackageReference Include="Amazon.CDK" Version="1.98.0" />
+    <PackageReference Include="Amazon.CDK.AWS.CodePipeline" Version="1.98.0" />
+    <PackageReference Include="Amazon.CDK.AWS.CodePipeline.Actions" Version="1.98.0" />
     <PackageReference Include="Amazon.CDK.AWS.ECS" Version="1.98.0" />
     <PackageReference Include="Amazon.CDK.AWS.ECS.Patterns" Version="1.98.0" />
     <PackageReference Include="Amazon.CDK.AWS.IAM" Version="1.98.0" />
@@ -20,6 +22,18 @@
     <!-- jsii Roslyn analyzers (un-comment to obtain compile-time checks for missing required props
     <PackageReference Include="Amazon.Jsii.Analyzers" Version="*" PrivateAssets="all" />
     -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="BuildSpecs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="BuildSpecs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="BuildSpecs\**" />
   </ItemGroup>
 
 </Project>

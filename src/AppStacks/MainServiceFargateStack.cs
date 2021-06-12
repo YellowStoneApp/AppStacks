@@ -1,9 +1,6 @@
-using System.Collections.Generic;
 using Amazon.CDK;
 using Amazon.CDK.AWS.CertificateManager;
-using Amazon.CDK.AWS.CodeBuild;
 using Amazon.CDK.AWS.EC2;
-using Amazon.CDK.AWS.ECR;
 using Amazon.CDK.AWS.ECS;
 using Amazon.CDK.AWS.ECS.Patterns;
 using Amazon.CDK.AWS.IAM;
@@ -14,6 +11,9 @@ namespace AppStacks
 {
     public class MainServiceFargateStack : Stack
     {
+        public ApplicationLoadBalancedFargateService FargateService { get; }
+        public Cluster Cluster { get; }
+
         internal MainServiceFargateStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
         {
             var vpc = new Vpc(this, "MainServiceVpc", new VpcProps
@@ -21,7 +21,7 @@ namespace AppStacks
                 MaxAzs = 3
             });
 
-            var cluster = new Cluster(this, "MainServiceCluster", new ClusterProps
+            Cluster = new Cluster(this, "MainServiceCluster", new ClusterProps
             {
                 Vpc = vpc
             });
@@ -76,8 +76,8 @@ namespace AppStacks
             
             var serviceProps = new ApplicationLoadBalancedFargateServiceProps()
             {
-                Cluster = cluster,
-                DesiredCount = 2,
+                Cluster = Cluster,
+                DesiredCount = 1,
                 TaskDefinition = taskDefinition,
                 MemoryLimitMiB = 2048,
                 PublicLoadBalancer = true,
@@ -87,39 +87,8 @@ namespace AppStacks
             };
             
             // create the load balanced Fargate service and make it public. 
-            var service = new ApplicationLoadBalancedFargateService(this, "MainServiceFargateService", serviceProps);
+            FargateService = new ApplicationLoadBalancedFargateService(this, "MainServiceFargateService", serviceProps);
             
-            // Code Build 
-            // var repo = new Repository(this, "MainServiceRepo");
-            //
-            // var githubSource = Source.GitHub(new GitHubSourceProps
-            // {
-            //     Owner = "rpbarnes",
-            //     Repo = "YellowStoneApp/MainService",
-            //     Webhook = true,
-            //     WebhookFilters = new []
-            //     {
-            //         // this will trigger deploy when push to deploy
-            //         FilterGroup.InEventOf(EventAction.PUSH).AndBranchIs("deploy")
-            //     },
-            // });
-            //
-            // var project = new Project(this, "MainServiceDeploymentProject", new ProjectProps
-            // {
-            //     ProjectName = StackName,
-            //     Source = githubSource,
-            //     Environment = new BuildEnvironment
-            //     {
-            //         BuildImage = LinuxBuildImage.AMAZON_LINUX_2_2,
-            //         Privileged = true,
-            //     },
-            //     BuildSpec = BuildSpec.FromObject(new Dictionary<string, object>()
-            //     {
-            //         
-            //     }) 
-            //     
-            // })
-
         }
     }
 }
